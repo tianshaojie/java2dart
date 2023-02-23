@@ -70,30 +70,30 @@ java2dart() {
   #Integer.valueOf, Integer.parseInt
   sed -i "s/Integer.valueOf/int.parse/g" "$java2dartFile"
   sed -i "s/Integer.parseInt/int.parse/g" "$java2dartFile"
-  sed -i "s/Integer.toString/StringUtil.parseString/g" "$java2dartFile"
+  sed -i "s/Integer.toString/ParseUtil.parseString/g" "$java2dartFile"
 
   #String.valueOf
-  sed -i "s/String.valueOf/StringUtil.parseString/g" "$java2dartFile"
+  sed -i "s/String.valueOf/ParseUtil.parseString/g" "$java2dartFile"
 
   #Long.valueOf, Long.parseInt
   sed -i "s/Long.valueOf/int.parse/g" "$java2dartFile"
   sed -i "s/Long.parseLong/int.parse/g" "$java2dartFile"
-  sed -i "s/Long.toString/StringUtil.parseString/g" "$java2dartFile"
+  sed -i "s/Long.toString/ParseUtil.parseString/g" "$java2dartFile"
 
   #Double.valueOf, Double.parseInt
   sed -i "s/Double.valueOf/double.parse/g" "$java2dartFile"
   sed -i "s/Double.parseDouble/double.parse/g" "$java2dartFile"
-  sed -i "s/Double.toString/StringUtil.parseString/g" "$java2dartFile"
+  sed -i "s/Double.toString/ParseUtil.parseString/g" "$java2dartFile"
 
   #Float.valueOf, Float.parseInt
   sed -i "s/Float.valueOf/double.parse/g" "$java2dartFile"
   sed -i "s/Float.parseFloat/double.parse/g" "$java2dartFile"
-  sed -i "s/Float.toString/StringUtil.parseString/g" "$java2dartFile"
+  sed -i "s/Float.toString/ParseUtil.parseString/g" "$java2dartFile"
 
   #Boolean.valueOf, Boolean.parseInt
   sed -i "s/Boolean.valueOf/StringUtil.parseBool/g" "$java2dartFile"
   sed -i "s/Boolean.parseBoolean/StringUtil.parseBool/g" "$java2dartFile"
-  sed -i "s/Boolean.toString/StringUtil.parseString/g" "$java2dartFile"
+  sed -i "s/Boolean.toString/ParseUtil.parseString/g" "$java2dartFile"
 
   echo "==>Integer/String/Long/Double/Float/Boolean替换"
   echo "---------------------------------------------"
@@ -147,33 +147,27 @@ java2dart() {
   echo "==>double[]替换为Float64List"
   echo "---------------------------------------------"
 
-
-  #echo 'new String[commandMap.length][2];' | sed 's/s/new String\[.*\]\[.*\]/{}/g/g'
-  #echo 'new String[mIPType.length][];' | sed 's/new String\[.*\]\[.*\]/{}/g/g'
-  #echo 'new String[][]{{HeaderType.TOKEN, AppInfo.token}, {HeaderType.SYMBOL, code}};' | sed 's/new String\[.*\]\[.*\]/{}/g'
-  sed -i "s/new String\[.*\]\[.*\]/{}/g" "$java2dartFile"
-  #echo 'String[][] command' | sed 's/String\[\]\[\] /Map<String, String> /g'
-  sed -i "s/String\[\]\[\] /Map<String, String> /g" "$java2dartFile"
-  #String[][] command = new String[][]{{HeaderType.TOKEN, AppInfo.token}, {HeaderType.SYMBOL, code}};
-  #echo '{{HeaderType.TOKEN, AppInfo.token}, {HeaderType.SYMBOL, code}, {HeaderType.SYMBOL, code}, {HeaderType.SYMBOL, code}};' | sed "s/{{\(.*\),\(.*\)}, *{\(.*\),\(.*\)}, *{\(.*\),\(.*\)}, *{\(.*\),\(.*\)}}/{\1:\2, \3:\4, \5:\6, \7:\8}/g"
-  #echo '{{HeaderType.TOKEN, AppInfo.token}, {HeaderType.SYMBOL, code}, {HeaderType.SYMBOL, code}};' | sed "s/{{\(.*\),\(.*\)}, *{\(.*\),\(.*\)}, *{\(.*\),\(.*\)}}/{\1:\2, \3:\4, \5:\6}/g"
-  #echo 'new String[][]{{HeaderType.TOKEN, AppInfo.token}, {HeaderType.SYMBOL, code}};'| sed 's/new String\[.*\]\[.*\]/{}/g' | sed "s/{}{{\(.*\),\(.*\)}, *{\(.*\),\(.*\)}}/{\1:\2, \3:\4}/g"
-  sed -i "s/{}{{\(.*\),\(.*\)}, *{\(.*\),\(.*\)}, *{\(.*\),\(.*\)}, *{\(.*\),\(.*\)}}/{\1:\2, \3:\4, \5:\6, \7:\8}/g" "$java2dartFile"
-  sed -i "s/{}{{\(.*\),\(.*\)}, *{\(.*\),\(.*\)}, *{\(.*\),\(.*\)}}/{\1:\2, \3:\4, \5:\6}/g" "$java2dartFile"
-  sed -i "s/{}{{\(.*\),\(.*\)}, *{\(.*\),\(.*\)}}/{\1:\2, \3:\4}/g" "$java2dartFile"
-  sed -i "s/{}{{\(.*\),\(.*\)}}/{\1:\2}/g" "$java2dartFile"
-  echo "==>String[][]替换为Map"
+  #echo 'String[][] command = new String[][]{{"t", "token"}, {"c", "code"}, {"c", "code"}, {"c", "code"}};' | sed 's/String\[\]\[\] /List<List<String>> /g' | sed "s/new String\[.*\]\[.*\]/<List<String>>[]/g" | sed 's/<List<String>>\[\]{{\(.*\),\(.*\)}, *{\(.*\),\(.*\)}, *{\(.*\),\(.*\)}, *{\(.*\),\(.*\)}}/[[\1,\2], [\3,\4], [\5,\6], [\7,\8]]/g'
+  #echo 'String[][] command = new String[][]{{"t", "token"}, {"c", "code"}, {"c", "code"}};' | sed 's/String\[\]\[\] /List<List<String>> /g' | sed "s/new String\[.*\]\[.*\]/<List<String>>[]/g" | sed 's/<List<String>>\[\]{{\(.*\),\(.*\)}, *{\(.*\),\(.*\)}, *{\(.*\),\(.*\)}}/[[\1,\2], [\3,\4], [\5,\6]]/g'
+  #echo 'String[][] command = new String[][]{{"t", "token"}, {"c", "code"}};' | sed 's/String\[\]\[\] /List<List<String>> /g' | sed "s/new String\[.*\]\[.*\]/<List<String>>[]/g" | sed 's/<List<String>>\[\]{{\(.*\),\(.*\)}, *{\(.*\),\(.*\)}}/[[\1,\2], [\3,\4]]/g'
+  #echo 'String[][] command = new String[][]{{"t", "token"}};' | sed 's/String\[\]\[\] /List<List<String>> /g' | sed "s/new String\[.*\]\[.*\]/<List<String>>[]/g" | sed 's/<List<String>>\[\]{{\(.*\),\(.*\)}}/[[\1,\2]]/g'
+  sed -i "s/new String\[.*\]\[.*\]/<List<String>>[]/g" "$java2dartFile"
+  sed -i "s/String\[\]\[\] /List<List<String>> /g" "$java2dartFile"
+  sed -i "s/<List<String>>\[\]{{\(.*\),\(.*\)}, *{\(.*\),\(.*\)}, *{\(.*\),\(.*\)}, *{\(.*\),\(.*\)}}/[[\1,\2], [\3,\4], [\5,\6], [\7,\8]]/g" "$java2dartFile"
+  sed -i "s/<List<String>>\[\]{{\(.*\),\(.*\)}, *{\(.*\),\(.*\)}, *{\(.*\),\(.*\)}}/[[\1,\2], [\3,\4], [\5,\6]]/g" "$java2dartFile"
+  sed -i "s/<List<String>>\[\]{{\(.*\),\(.*\)}, *{\(.*\),\(.*\)}}/[[\1,\2], [\3,\4]]/g" "$java2dartFile"
+  sed -i "s/<List<String>>\[\]{{\(.*\),\(.*\)}}/[[\1,\2]]/g" "$java2dartFile"
+  echo "==>String[][]替换为List<List<String>>"
   echo "---------------------------------------------"
 
-  #分号增加准确性
   #echo 'new String[]{"AUTH_IP","SH_IP","SZ_IP","PB_IP","BJ_IP","HKD1_IP"};' | sed "s/new String\[\]{\(.*\)}/[\1]/g"
   #echo 'new String[]{plateIndexItem.mainforceMoneyInflow};' | sed "s/new String\[\]{\(.*\)}/[\1]/g"
-  #echo 'newShareList.setSubTitles(new String[]{"股票", "发行价", "市盈率", "中签公布"});' | sed "s/new String\[\]{\(.*\)}/[\1]/g"
+  #echo 'newShareList.setSubTitles(new String[]{"1", "2", "3", "4"});' | sed "s/new String\[\]{\(.*\)}/[\1]/g"
   sed -i "s/new String\[\]{\(.*\)}/[\1]/g" "$java2dartFile"
-  #echo 'new String[]{};' | sed 's/new String\[\]{};/\[\];/g'
-  sed -i "s/new String\[\]{}/\[\]/g" "$java2dartFile"
-  #echo 'new String[jsonArray.length()];' | sed 's/new String\[.*\];/[];/g'
-  sed -i "s/new String\[.*\];/[];/g" "$java2dartFile"
+  #echo 'new String[]{};' | sed 's/new String\[\]{};/[];/g'
+  sed -i "s/new String\[\]{}/[]/g" "$java2dartFile"
+  #echo 'new String[jsonArray.length()];' | sed 's/new String\[\(.*\)\]/List.filled(\1, "")/g'
+  sed -i 's/new String\[\(.*\)\]/List.filled(\1, "")/g' "$java2dartFile"
   sed -i "s/String\[\]/List<String>/g" "$java2dartFile"
   echo "==>String[]替换为List<String>"
   echo "---------------------------------------------"
@@ -221,7 +215,7 @@ java2dart() {
   echo "==>/Hashtable/ConcurrentMap/SparseArray/ArrayList替换为Map/List"
   echo "---------------------------------------------"
 
-  echo 'for (Map.Entry<String, BaseQuoteItem> entry : mQuoteItems.entrySet()) {' | sed "s/.entrySet()/.entries/g" | sed "s/Map.Entry</MapEntry</g"
+  #echo 'for (Map.Entry<String, BaseQuoteItem> entry : mQuoteItems.entrySet()) {' | sed "s/.entrySet()/.entries/g" | sed "s/Map.Entry</MapEntry</g"
   sed -i "s/Map.Entry</MapEntry</g" "$java2dartFile"
   sed -i "s/.entrySet()/.entries/g" "$java2dartFile"
   sed -i "s/.getKey()/.key/g" "$java2dartFile"
@@ -229,7 +223,7 @@ java2dart() {
   echo "==>Map.Entry替换为entrySet"
   echo "---------------------------------------------"
 
-  echo 'builder.append(" stockType = '").append(str).append("' or ");' | sed "s/.append(/..write(/g"
+  #echo 'builder.append(" stockType = '").append(str).append("' or ");' | sed "s/.append(/..write(/g"
   sed -i "s/\bStringBuilder\b/StringBuffer/g" "$java2dartFile"
   sed -i "s/.append(/..write(/g" "$java2dartFile"
   echo "==>StringBuilder替换为StringBuffer"
@@ -372,7 +366,7 @@ java2dart() {
   echo "---------------------------------------------"
 
   ##=============================
-  #SDK内一些个性化的替换，非通用语法替换
+  #SDK内一些个性化的替换，非通用语法替换，可自行添加
   ##=============================
   # sed -i "s/ extends SseSerializable//g" "$java2dartFile"
   # sed -i "s/ implements SseSerializable//g" "$java2dartFile"
